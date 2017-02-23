@@ -1,0 +1,18 @@
+---
+# See https://github.com/openfoodfoundation/ofn-install/wiki/Setup for more info
+checkout_zone: Europe
+country_code: ES
+currency: EUR
+locale: es
+language: es_ES.UTF-8
+language_packages:
+  - language-pack-es-base
+l10n_repo: https://github.com/openfoodfoundation/l10n_au.git
+timezone: Madrid
+
+# Used for the LetsEncrypt email setting
+developer_email: info@coopdevs.org
+
+# Users listed here will have their key from /files/keys added to the unicorn_user
+users_sysadmin:
+  - enricostn

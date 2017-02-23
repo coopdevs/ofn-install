@@ -1,0 +1,45 @@
+---
+- name: default_user
+  hosts: ofn_servers
+  remote_user: ubuntu
+  roles:
+    - role: default_user
+      become: yes
+      tags: default_user
+
+- name: provision
+  hosts: ofn_servers
+  remote_user: "{{ user }}"
+
+  vars:
+    nginx_daemon_mode: off
+
+  roles:
+    - role: unicorn_user # Create unprivileged user to run unicorn
+      tags: unicorn_user
+
+    - role: common # Install common apps and libraries, and setup shell.
+      tags: common
+
+    - role: language # Setup locale.
+      tags: language
+
+    - role: zzet.rbenv # Install ruby. If missing run: ansible-galaxy install zzet.rbenv
+      rbenv:
+        env: user
+        version: v1.0.0
+        default_ruby: "{{ ruby_version }}"
+        rubies:
+          - version: "{{ ruby_version }}"
+
+      rbenv_users:
+        - "{{ unicorn_user }}"
+      tags: ruby
+
+    - role: bundler # Install bundler on its own here as it has to be installed after zzet.rbenv
+      become: yes
+      become_user: "{{ unicorn_user }}"
+      tags: bundler
+
+    - role: dbserver # Set up database server and user for the app.
+      tags: dbserver
