@@ -6,6 +6,8 @@
     - role: default_user
       become: yes
       tags: default_user
+  vars:
+    ansible_python_interpreter: /usr/bin/python2.7
 
 - name: provision
   hosts: ofn_servers
@@ -39,3 +41,5 @@
 
     - role: dbserver # Set up database server and user for the app.
       tags: dbserver
+  vars:
+    ansible_python_interpreter: /usr/bin/python2.7
