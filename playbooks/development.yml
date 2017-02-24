@@ -10,10 +10,6 @@
 - name: provision
   hosts: ofn_servers
   remote_user: "{{ user }}"
-
-  vars:
-    nginx_daemon_mode: off
-
   roles:
     - role: unicorn_user # Create unprivileged user to run unicorn
       tags: unicorn_user

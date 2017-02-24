@@ -1,6 +1,4 @@
 ---
-
 domain: local.ofn.org
 rails_env: development
-
 admin_email: admin@example.com
