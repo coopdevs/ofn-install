@@ -63,7 +63,17 @@ staging.usfoodcoop.org ansible_host=
 us-prod
 us-staging
 
+#------------------------------------------------------------------------------
+# Spain
 
+[es-prod]
+alpha.katuma.org ansible_host=51.15.136.157
+
+[es-staging]
+
+[es:children]
+es-prod
+es-staging
 
 #------------------------------------------------------------------------------
 # All
@@ -74,4 +84,4 @@ ie
 in
 uk
 us
-de
+es

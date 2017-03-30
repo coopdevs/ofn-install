@@ -5,4 +5,4 @@ rails_env: test
 
 admin_email: admin@example.com
 
-protocol: http
+protocol: https
