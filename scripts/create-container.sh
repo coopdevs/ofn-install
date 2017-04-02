@@ -1,11 +1,5 @@
 #!/bin/bash
 # Createded date: 21/03/2016
-#
-# Run command
-# -n - Name of container. Ex.: ofn-dev
-# -u - user of system container login with ssh key. Ex.: openfoodnetwork
-# -h - host of container. Ex.: local.ofn.org / 10.0.3.118
-# ./create-container.sh -n ofn-dev-test -t template -r release -h local.ofn.org -c config-file
 
 # Flags
 # set -e
@@ -85,6 +79,7 @@ echo
 
 # ADD IP TO HOSTS
 #   Check if is alredy in /etc/hosts
+#   TODO -> Check host name too
 echo "Checking if is ip $ip_container in /etc/hosts"
 exist_host=$(grep $ip_container /etc/hosts)
 echo $exist_host
