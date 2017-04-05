@@ -1,21 +1,8 @@
 ---
-- name: default_user
+- name: provision
   hosts: ofn_servers
   remote_user: ubuntu
   roles:
-    - role: default_user
-      become: yes
-      tags: default_user
-  vars:
-    ansible_python_interpreter: /usr/bin/python2.7
-
-- name: provision
-  hosts: ofn_servers
-  remote_user: "{{ user }}"
-  roles:
-    - role: unicorn_user # Create unprivileged user to run unicorn
-      tags: unicorn_user
-
     - role: common # Install common apps and libraries, and setup shell.
       tags: common
 
