@@ -60,26 +60,39 @@ if [ -z "${exist_container}" ] ; then
 fi
 echo "Container ready"
 
-# Check if is running container
-is_running=$(sudo lxc-ls --running -f | grep $name)
-if [ -z "$is_running" ] ; then
-  echo "Starting container"
-  sudo lxc-start -n "$name" -d
+# Check if is running container, if not start
+count="0"
+while [ "$count" -lt 5 ] && [ -z "$is_running" ]; do
+  is_running=$(sudo lxc-ls --running -f | grep $name)
+  if [ -z "$is_running" ] ; then
+    echo "Starting container"
+    sudo lxc-start -n "$name" -d
+    ((count++))
+  fi
+done
+
+# If not is running stop execution
+if [ -z "$is_running" ]; then
+  echo "Container not started..."
+  echo "STOP EXECUTION"
+  exit 0
 fi
+
 echo "Container is running..."
 # Wait to start container and check the ip
+count="0"
 ip_container="$( sudo lxc-info -n "$name" -iH )"
-while [ -z "$ip_container" ] ; do
+while [ "$count" -lt 5 ] && [ -z "$ip_container" ] ; do
   sleep 2
   echo "waiting container ip..."
   ip_container="$( sudo lxc-info -n "$name" -iH )"
+  ((count++))
 done
 echo "Container IP: $ip_container"
 echo
 
 # ADD IP TO HOSTS
 #   Check if is alredy in /etc/hosts
-#   TODO -> Check host name too
 echo "Checking if is ip $ip_container in /etc/hosts"
 exist_host=$(grep $ip_container /etc/hosts)
 echo $exist_host
