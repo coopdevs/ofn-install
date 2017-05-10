@@ -5,13 +5,13 @@
 # set -e
 
 # Default values
-name="ofn-test"
-template="/usr/share/lxc/templates/lxc-ubuntu"
-rls="trusty"
-dconfig="/tmp/ubuntu.$name.conf"
-host="ofn-test.org"
-nproject="openfoodnetwork"
-fproject="${PWD%/*}/$nproject"
+name="ofn-dev"
+# template="/usr/share/lxc/templates/lxc-ubuntu"
+# rls="trusty"
+# dconfig="/tmp/ubuntu.$name.conf"
+# host="ofn-test.org"
+# nproject="openfoodnetwork"
+# fproject="${PWD%/*}/$nproject"
 user="ubuntu"
 inv="$PWD/inventory/dev"
 playbook="playbooks/development.yml"

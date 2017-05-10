@@ -175,4 +175,8 @@ nginx_configs:
   upstream:
     - upstream unicorn { server unix:{{ unicorn_sock }} fail_timeout=0; }
 
+# Users listed here will have their key from /files/keys added to the unicorn_user
+users_sysadmin:
+  - enricostn
+  - dani
 # letsencrypt_server: https://acme-staging.api.letsencrypt.org/directory

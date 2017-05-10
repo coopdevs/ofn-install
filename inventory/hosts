@@ -64,18 +64,6 @@ us-prod
 us-staging
 
 #------------------------------------------------------------------------------
-# Spain
-
-[es-prod]
-alpha.katuma.org ansible_host=51.15.136.157
-
-[es-staging]
-
-[es:children]
-es-prod
-es-staging
-
-#------------------------------------------------------------------------------
 # All
 
 [ofn_servers:children]
@@ -84,4 +72,3 @@ ie
 in
 uk
 us
-es
