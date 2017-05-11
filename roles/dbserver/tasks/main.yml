@@ -18,6 +18,14 @@
     password={{ db_password }}
     role_attr_flags=CREATEDB,NOSUPERUSER
 
+- name: create db superuser
+  become: yes
+  become_user: postgres
+  postgresql_user:
+    name=ofn
+    password=f00d
+    role_attr_flags=CREATEDB,SUPERUSER
+
 # https://wiki.postgresql.org/wiki/Pgpass
 - name: generate the .pgpass file
   template:

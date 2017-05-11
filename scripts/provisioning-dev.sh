@@ -33,3 +33,51 @@ bin/setup
 # Execute playbook development.yml:
 echo "Ansible playbook"
 ansible-playbook "$playbook" -u "$user" -i "$inv" --limit=lxc -vvvvv --ask-sudo-pas
+echo "Provision OK!"
+echo
+
+# 5º Entrar en el container por ssh:
+# ssh openfoodnetwork@local.ofn.org
+#
+# 6ª Instalamos la aplicaión ruby
+# cd openfoodnetwork
+# bundle install
+#
+# TODO --> Esto se debe hacer antes de crear el container
+#   Configure the site:
+#     cp config/application.yml.example config/application.yml
+#     edit config/application.yml
+#
+# Create a PostgreSQL user:
+# Login as your system postrgresql priviledged user: sudo -i -u postgres (this may vary on your OS). Now your prompt looks like: [postgres@your_host ~]$
+# Create the ofn database superuser and give it the password f00d:
+# createuser -s -P ofn
+#
+# Create the development and test databases, using the settings specified in config/database.yml, and populate them with a schema and seed data:
+# rake db:setup
+#
+# Load some default data for your environment:
+# rake openfoodnetwork:dev:load_sample_data
+
+# echo "Accessing to ${HOST}"
+# ssh "${USER}"@"${HOST}" -A << EOF
+#     cd openfoodnetwork/
+#     echo "Installing ruby application and gem dependencies"
+#     bundle install
+#     echo "Creating postgres ofn user..."
+#     echo
+#     echo "Login as your system postrgresql priviledged user"
+#     echo
+#     echo "Create the ofn database superuser and give it the password f00d"
+#     sudo -i -u postgres << EOF
+#       createuser -s -P ofn
+#     EOF
+#     echo
+#     echo "Postgres ofn user created"
+#     echo "Creating the databases usung the setting specified in config/database.yml and populate them..."
+#     rake db:setup
+#     echo
+#     echo "Load default data for development environment..."
+#     rake openfoodnetwork:dev:load_sample_data
+#     echo "Databases ready!"
+# EOF
