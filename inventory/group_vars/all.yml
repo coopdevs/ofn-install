@@ -44,8 +44,9 @@ env:
 # Database variables
 db: openfoodnetwork
 test_db: ofn_test
-db_user: ofn_user
+db_user: ofn
 db_host: localhost
+# db_superuser: ofn
 
 
 #----------------------------------------------------------------------
@@ -174,5 +175,5 @@ nginx_events_params:
 nginx_configs:
   upstream:
     - upstream unicorn { server unix:{{ unicorn_sock }} fail_timeout=0; }
-    
+
 # letsencrypt_server: https://acme-staging.api.letsencrypt.org/directory

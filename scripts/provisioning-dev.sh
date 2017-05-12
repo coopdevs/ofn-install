@@ -9,7 +9,7 @@ name="ofn-dev"
 # template="/usr/share/lxc/templates/lxc-ubuntu"
 # rls="trusty"
 # dconfig="/tmp/ubuntu.$name.conf"
-# host="ofn-test.org"
+host="ofn-test.org"
 # nproject="openfoodnetwork"
 # fproject="${PWD%/*}/$nproject"
 user="ubuntu"
@@ -59,25 +59,16 @@ echo
 # Load some default data for your environment:
 # rake openfoodnetwork:dev:load_sample_data
 
-# echo "Accessing to ${HOST}"
-# ssh "${USER}"@"${HOST}" -A << EOF
-#     cd openfoodnetwork/
-#     echo "Installing ruby application and gem dependencies"
-#     bundle install
-#     echo "Creating postgres ofn user..."
-#     echo
-#     echo "Login as your system postrgresql priviledged user"
-#     echo
-#     echo "Create the ofn database superuser and give it the password f00d"
-#     sudo -i -u postgres << EOF
-#       createuser -s -P ofn
-#     EOF
-#     echo
-#     echo "Postgres ofn user created"
-#     echo "Creating the databases usung the setting specified in config/database.yml and populate them..."
-#     rake db:setup
-#     echo
-#     echo "Load default data for development environment..."
-#     rake openfoodnetwork:dev:load_sample_data
-#     echo "Databases ready!"
-# EOF
+echo "Accessing to $host"
+ssh "$user"@"$host" -A <<- EOF
+        cd openfoodnetwork/
+        echo "Installing ruby application and gem dependencies"
+        bundle install
+        echo "Postgres ofn user created"
+        echo "Creating the databases usung the setting specified in config/database.yml and populate them..."
+        rake db:setup
+        echo
+        echo "Load default data for development environment..."
+        rake openfoodnetwork:dev:load_sample_data
+echo "Databases ready!"
+EOF
