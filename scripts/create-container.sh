@@ -34,6 +34,7 @@ lxc.network.link = $network_link
 
 # Shared directories
 lxc.mount.entry = $fproject /var/lib/lxc/$name/rootfs/home/ubuntu/$nproject none bind,create=dir 0.0
+lxc.mount.entry = $fproject /var/lib/lxc/$name/rootfs/home/openfoodnetwork/$nproject none bind,create=dir 0.0
 EOL
 fi
 
@@ -105,16 +106,6 @@ fi
 echo "$host --> $ip_container"
 
 # SSH Key
-
-if [ "$USER" == "root" ] ; then
-  ssh_pub_key="/root/.ssh/id_rsa.pub"
-else
-  ssh_pub_key="/home/$USER/.ssh/id_rsa.pub"
-fi
-# Check if exist ssh pub key
-if [ ! -e "$ssh_pub_key" ] ; then
-  echo "Create ssh key"
-fi
-ssh-copy-id -i "$ssh_pub_key" "$user"@"$host"
+ssh-copy-id "$user"@"$host"
 
 echo "$(sudo lxc-ls -f $name)"
