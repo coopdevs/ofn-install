@@ -15,7 +15,7 @@ host="ofn-test.org"
 user="ubuntu"
 inv="$PWD/inventory/dev"
 playbook="playbooks/development.yml"
-
+root_passwd="root"
 # External files
 # Get cfg values
 source "$PWD/scripts/config/lxc.cfg"
@@ -27,39 +27,36 @@ echo "Installing Python2.7"
 sudo lxc-attach -n "$name" -- sudo apt update
 sudo lxc-attach -n "$name" -- sudo apt install -y python2.7
 
+# Set root password
+sudo lxc-attach -n "$name" -- passwd<<EOL
+"$root_passwd"
+"$root_passwd"
+EOL
+
+# Change sshd config file to prermit root login
+sudo lxc-attach -n "$name" -- /bin/sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+sudo lxc-attach -n "$name" -- /bin/sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# Reboot the container
+sudo lxc-stop -n "$name"
+
 # Install the community role dependencies of the playbooks
 bin/setup
 
+sudo lxc-start -n "$name"
+
+ssh-copy-id root@local.ofn.org<<EOL
+"$root_passwd"
+EOL
+
 # Execute playbook development.yml:
 echo "Ansible playbook"
-ansible-playbook "$playbook" -u "$user" -i "$inv" --limit=lxc -vvvvv --ask-sudo-pas
+ansible-playbook "$playbook" -u "$user" -i "$inv" -e 'ansible_python_interpreter=/usr/bin/python2.7' --limit=lxc --ask-sudo-pass
 echo "Provision OK!"
 echo
 
-# 5º Entrar en el container por ssh:
-# ssh openfoodnetwork@local.ofn.org
-#
-# 6ª Instalamos la aplicaión ruby
-# cd openfoodnetwork
-# bundle install
-#
-# TODO --> Esto se debe hacer antes de crear el container
-#   Configure the site:
-#     cp config/application.yml.example config/application.yml
-#     edit config/application.yml
-#
-# Create a PostgreSQL user:
-# Login as your system postrgresql priviledged user: sudo -i -u postgres (this may vary on your OS). Now your prompt looks like: [postgres@your_host ~]$
-# Create the ofn database superuser and give it the password f00d:
-# createuser -s -P ofn
-#
-# Create the development and test databases, using the settings specified in config/database.yml, and populate them with a schema and seed data:
-# rake db:setup
-#
-# Load some default data for your environment:
-# rake openfoodnetwork:dev:load_sample_data
-
 echo "Accessing to $host"
+user="openfoodnetwork"
 ssh "$user"@"$host" -A <<- EOF
         cd openfoodnetwork/
         echo "Installing ruby application and gem dependencies"
