@@ -1,8 +1,22 @@
 ---
+- name: default_user
+  hosts: ofn_servers
+  remote_user: root
+  roles:
+    - role: default_user
+      become: yes
+      tags: default_user
+  vars:
+    - users_sysadmin:
+        - dani
+
 - name: provision
   hosts: ofn_servers
-  remote_user: ubuntu
+  remote_user: "{{ user }}"
   roles:
+    - role: unicorn_user # Create unprivileged user to run unicorn
+      tags: unicorn_user
+
     - role: common # Install common apps and libraries, and setup shell.
       tags: common
 
@@ -33,4 +47,5 @@
     language_packages:
       - language-pack-en-base
     language: en_US.UTF-8
-    unicorn_user: ubuntu
+    users_sysadmin:
+      - dani
