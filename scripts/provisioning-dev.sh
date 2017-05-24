@@ -28,26 +28,30 @@ sudo lxc-attach -n "$name" -- sudo apt update
 sudo lxc-attach -n "$name" -- sudo apt install -y python2.7
 
 # Set root password
+echo "Changing root password..."
 sudo lxc-attach -n "$name" -- passwd<<EOL
-"$root_passwd"
-"$root_passwd"
+$root_passwd
+$root_passwd
 EOL
+echo "New password: $root_passwd"
 
 # Change sshd config file to prermit root login
+echo "Changing sshd confing file to allow root login"
 sudo lxc-attach -n "$name" -- /bin/sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 sudo lxc-attach -n "$name" -- /bin/sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
 # Reboot the container
+echo "Rebooting container"
 sudo lxc-stop -n "$name"
 
 # Install the community role dependencies of the playbooks
+echo "Installing community dependencies of playbooks"
 bin/setup
 
 sudo lxc-start -n "$name"
 
-ssh-copy-id root@local.ofn.org<<EOL
-"$root_passwd"
-EOL
+echo "Copy ssh key for root user"
+ssh-copy-id root@"$host"
 
 # Execute playbook development.yml:
 echo "Ansible playbook"
