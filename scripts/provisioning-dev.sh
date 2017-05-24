@@ -59,8 +59,19 @@ ansible-playbook "$playbook" -u "$user" -i "$inv" -e 'ansible_python_interpreter
 echo "Provision OK!"
 echo
 
-echo "Accessing to $host"
+# Set root password
 user="openfoodnetwork"
+user_passwd="f00d"
+echo "Change password of user $user..."
+echo "NEW PASSWORD: $user_passwd"
+sudo lxc-attach -n "$name" -- passwd openfoodnetwork<<EOL
+$user_passwd
+$user_passwd
+EOL
+
+ssh-copy-id $user@$host
+
+echo "Accessing to $host"
 ssh "$user"@"$host" -A <<- EOF
         cd openfoodnetwork/
         echo "Installing ruby application and gem dependencies"
