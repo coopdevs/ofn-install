@@ -64,7 +64,7 @@ user="openfoodnetwork"
 user_passwd="f00d"
 echo "Change password of user $user..."
 echo "NEW PASSWORD: $user_passwd"
-sudo lxc-attach -n "$name" -- passwd openfoodnetwork<<EOL
+sudo lxc-attach -n "$name" -- passwd $user<<EOL
 $user_passwd
 $user_passwd
 EOL
