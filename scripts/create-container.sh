@@ -93,19 +93,16 @@ echo "Container IP: $ip_container"
 echo
 
 # ADD IP TO HOSTS
-#   Check if is alredy in /etc/hosts
-echo "Checking if is ip $ip_container in /etc/hosts"
-exist_host=$(grep $ip_container /etc/hosts)
-echo $exist_host
-#   If not exist add
-if [ -z "$exist_host" ] ; then
-  host_entry="$ip_container             $host             $name"
-  echo "Add '$host_entry' to /etc/hosts"
-  sudo -- sh -c "echo $host_entry >> /etc/hosts"
-fi
-echo "$host --> $ip_container"
-
+echo "Remove old host: $host"
+sudo sed -i '/{'$host'}/d' /etc/hosts
+host_entry="$ip_container             $host             $name"
+echo "Add '$host_entry' to /etc/hosts"
+sudo -- sh -c "echo $host_entry >> /etc/hosts"
+echo
 # SSH Key
+echo "Remove old $host of ~/.ssh/know_hosts"
+ssh-keygen -R "$host"
+echo "Copy ssh key"
 ssh-copy-id "$user"@"$host"
-
+echo
 echo "$(sudo lxc-ls -f $name)"
