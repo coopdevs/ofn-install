@@ -37,9 +37,9 @@ ssh "$user"@"$host" -A <<- EOF
         bundle install
         echo "Postgres ofn user created"
         echo "Creating the databases usung the setting specified in config/database.yml and populate them..."
-        rake db:setup
+        bundle exec rake db:setup
         echo
         echo "Load default data for development environment..."
-        rake openfoodnetwork:dev:load_sample_data
-echo "Databases ready!"
+        bundle exec rake openfoodnetwork:dev:load_sample_data
 EOF
+echo "Databases ready!"
