@@ -7,7 +7,7 @@
 # Default values
 name="ofn-dev"
 host="ofn-test.org"
-user="openfoodnetwork"
+app_user="openfoodnetwork"
 inv="$PWD/inventory/dev"
 playbook="playbooks/development.yml"
 # External files
@@ -27,11 +27,11 @@ bin/setup
 
 # Execute playbook development.yml:
 echo "Ansible playbook"
-ansible-playbook "$playbook" -u "$user" -i "$inv" -e 'ansible_python_interpreter=/usr/bin/python2.7' --limit=lxc --ask-sudo-pass
+ansible-playbook "$playbook" -u "$app_user" -i "$inv" -e 'ansible_python_interpreter=/usr/bin/python2.7' --limit=lxc --ask-sudo-pass
 echo "Provision OK!"
 echo
 echo "Accessing to $host"
-ssh "$user"@"$host" -A <<- EOF
+ssh "$app_user"@"$host" -A <<- EOF
         cd openfoodnetwork/
         echo "Installing ruby application and gem dependencies"
         bundle install
