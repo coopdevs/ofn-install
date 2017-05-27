@@ -51,7 +51,7 @@ exist_container="$(sudo lxc-ls $name)"
 echo "Check container ${exist_container}"
 if [ -z "${exist_container}" ] ; then
   echo "Creating container $name"
-  sudo lxc-create --name "$name" -f "$config" -t "$template" -- --release "$rls"
+  sudo lxc-create --name "$name" -f "$config" -t "$template" --logfile ./log/$name-create.log -- --release "$rls"
 fi
 echo "Container ready"
 
@@ -61,7 +61,7 @@ while [ "$count" -lt 5 ] && [ -z "$is_running" ]; do
   is_running=$(sudo lxc-ls --running -f | grep $name)
   if [ -z "$is_running" ] ; then
     echo "Starting container"
-    sudo lxc-start -n "$name" -d
+    sudo lxc-start -n "$name" -d --logfile ./log/$name-start.log
     ((count++))
   fi
 done
