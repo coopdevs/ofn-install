@@ -6,16 +6,10 @@
 
 # Default values
 name="ofn-dev"
-# template="/usr/share/lxc/templates/lxc-ubuntu"
-# rls="trusty"
-# dconfig="/tmp/ubuntu.$name.conf"
 host="ofn-test.org"
-# nproject="openfoodnetwork"
-# fproject="${PWD%/*}/$nproject"
-user="ubuntu"
+user="openfoodnetwork"
 inv="$PWD/inventory/dev"
 playbook="playbooks/development.yml"
-root_passwd="root"
 # External files
 # Get cfg values
 source "$PWD/scripts/config/lxc.cfg"

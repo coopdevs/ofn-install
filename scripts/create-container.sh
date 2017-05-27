@@ -12,8 +12,7 @@ dconfig="/tmp/ubuntu.$name.conf"
 host="ofn-test.org"
 nproject="openfoodnetwork"
 fproject="${PWD%/*}/$nproject"
-user="ubuntu"
-
+app_user="openfoodnetwork"
 # External files
 # Get cfg values
 source "$PWD/scripts/config/lxc.cfg"
@@ -25,16 +24,11 @@ if [ ! -e "$config" ] ; then
   echo "Creating config file: $config"
 
   network_link="$(brctl show | awk '{if ($1 != "bridge")  print $1 }')"
-  # conf_data=$ \nlxc.network.link = '$network_link
   cat >"$config" <<EOL
 # Network configuration
 lxc.network.type = veth
 lxc.network.flags = up
 lxc.network.link = $network_link
-
-# Shared directories
-lxc.mount.entry = $fproject /var/lib/lxc/$name/rootfs/home/ubuntu/$nproject none bind,create=dir 0.0
-lxc.mount.entry = $fproject /var/lib/lxc/$name/rootfs/home/openfoodnetwork/$nproject none bind,create=dir 0.0
 EOL
 fi
 
@@ -93,16 +87,50 @@ echo "Container IP: $ip_container"
 echo
 
 # ADD IP TO HOSTS
-echo "Remove old host: $host"
-sudo sed -i '/{'$host'}/d' /etc/hosts
-host_entry="$ip_container             $host             $name"
+echo "Remove old host $host form /etc/hosts"
+sudo sed -i '/'$host'/d' /etc/hosts
+host_entry="$ip_container       $host"
 echo "Add '$host_entry' to /etc/hosts"
 sudo -- sh -c "echo $host_entry >> /etc/hosts"
 echo
 # SSH Key
 echo "Remove old $host of ~/.ssh/know_hosts"
-ssh-keygen -R "$host"
-echo "Copy ssh key"
-ssh-copy-id "$user"@"$host"
+ssh-keygen -R $host
+echo
+echo "$(sudo lxc-ls -f $name)"
+echo
+echo
+# Set root password needed for ssh-copy-id
+echo "Changing root password..."
+sudo lxc-attach -n "$name" -- passwd
+echo
+# Change sshd config file to prermit root login
+echo "Changing sshd confing file to allow root login"
+sudo lxc-attach -n "$name" -- /bin/sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+sudo lxc-attach -n "$name" -- /bin/sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+echo
+echo
+echo "Copy ssh key for user root"
+ssh-copy-id root@$host
+# Delete default container user to create a app_user with UUID 1000 to have permissions to acces to mounted project
+sudo lxc-attach -n "$name" -- userdel -r ubuntu
+# Create openfoodnetwork user and set password
+echo "Create user $app_user"
+sudo lxc-attach -n "$name" -- useradd -m $app_user
+echo "Setting password of $app_user..."
+sudo lxc-attach -n "$name" -- passwd $app_user
+echo
+echo "Copy ssh key for $app_user"
+ssh-copy-id $app_user@$host
+# Mount project folder
+echo "Mounting project folder..."
+mount_entry="lxc.mount.entry = $fproject /var/lib/lxc/$name/rootfs/home/openfoodnetwork/$nproject none bind,create=dir 0.0"
+echo "$mount_entry" | sudo tee -a /var/lib/lxc/"$name"/config > /dev/null
+echo
+# Reboot the container
+echo "Rebooting container"
+sudo lxc-stop -n "$name"
+sleep 5
+sudo lxc-start -n "$name"
 echo
 echo "$(sudo lxc-ls -f $name)"
