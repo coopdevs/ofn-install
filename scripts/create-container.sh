@@ -110,8 +110,6 @@ sudo lxc-attach -n "$name" -- /bin/sed -i 's/PermitRootLogin prohibit-password/P
 sudo lxc-attach -n "$name" -- /bin/sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 echo
 echo
-echo "Copy ssh key for user root"
-ssh-copy-id root@$host
 # Delete default container user to create a app_user with UUID 1000 to have permissions to acces to mounted project
 sudo lxc-attach -n "$name" -- userdel -r ubuntu
 # Create openfoodnetwork user and set password
@@ -132,5 +130,8 @@ echo "Rebooting container"
 sudo lxc-stop -n "$name"
 sleep 5
 sudo lxc-start -n "$name"
+echo
+echo "Copy ssh key for user root"
+ssh-copy-id root@$host
 echo
 echo "$(sudo lxc-ls -f $name)"
