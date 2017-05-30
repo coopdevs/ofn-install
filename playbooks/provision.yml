@@ -55,6 +55,7 @@
 
     - role: dbserver # Set up database server and user for the app.
       tags: dbserver
+      db_user_roles: CREATEDB
 
     - role: geerlingguy.certbot
       become: yes
@@ -72,4 +73,3 @@
 
     - role: webserver # Build the unicorn webserver.
       tags: webserver
-
