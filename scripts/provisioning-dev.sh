@@ -2,7 +2,7 @@
 # Createded date: 21/03/2016
 
 # Flags
-# set -e
+set -e
 
 # Default values
 name="ofn-dev"
