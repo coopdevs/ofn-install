@@ -38,6 +38,6 @@ ssh "$app_user"@"$host" << EOF
   bundle exec rake db:setup
   echo
   echo "Load default data for development environment..."
-bundle exec rake openfoodnetwork:dev:load_sample_data
+  bundle exec rake openfoodnetwork:dev:load_sample_data
 EOF
 echo "Databases ready!"
