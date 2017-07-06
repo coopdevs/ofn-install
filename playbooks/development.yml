@@ -9,6 +9,7 @@
   vars:
     - users_sysadmin:
         - dani
+        - saimon
 
 - name: provision
   hosts: ofn_servers
