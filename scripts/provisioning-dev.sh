@@ -29,9 +29,11 @@ echo "Ansible playbook"
 ansible-playbook "$playbook" -u "$app_user" -i "$inv" -e 'ansible_python_interpreter=/usr/bin/python2.7' -vvv --limit=lxc --ask-sudo-pass
 echo "Provision OK!"
 echo
-echo "Accessing to $host with user $app_user"
+echo "Accessing $host with user $app_user"
 ssh "$app_user"@"$host" << EOF
   cd openfoodnetwork/
+  echo "Copy example config/application.yml"
+  cp -n config/application.yml.example config/application.yml
   echo "Installing ruby application and gem dependencies"
   bundle install
   echo "Doing the database setup..."

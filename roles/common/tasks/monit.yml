@@ -1,0 +1,8 @@
+--- # monit
+
+- name: configure monit
+  template:
+    src=monit.j2
+    dest=/etc/monit/conf.d/{{ app }}
+  become: yes
+

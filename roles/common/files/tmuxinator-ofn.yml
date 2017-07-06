@@ -1,0 +1,14 @@
+# ~/.tmuxinator/ofn.yml
+
+name: ofn
+root: ~
+
+windows:
+  - editor:
+    -
+  - console:
+    - cd ~/openfoodnetwork
+    - bundle exec rails console
+  - rails:
+    - cd ~/openfoodnetwork
+    - bundle exec rails server

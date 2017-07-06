@@ -1,45 +1,7 @@
 --- # common
 
-- name: update apt
-  apt:
-    update_cache=yes
-  become: yes
-  tags: packages
+- include: packages.yml
+- include: monit.yml
+- include: tmux.yml
+- include: welcome.yml
 
-  #TODO remove unnecesary packages from this list.
-- name: install base packages
-  apt:
-    pkg="{{ item }}"
-    state=present
-  become: yes
-  with_items:
-    - acl
-    - build-essential
-    - git-core
-    - nodejs
-    - imagemagick
-    - curl
-    - python-pycurl
-    - python-psycopg2 # needed for some ansible libraries
-    - python3-psycopg2
-    - python-software-properties
-    - libpq-dev
-    - tklib
-    - zlib1g-dev
-    - libssl-dev
-    #- libreadline-gplv2-dev
-    - libxml2
-    - libxml2-dev
-    - libxslt1-dev
-    - memcached
-    - ranger
-    - monit
-    #- fontconfig # needed for phantomjs
-    #- nfs-common # make virtualbox faster
-  tags: packages
-
-- name: configure monit
-  template:
-    src=monit.j2
-    dest=/etc/monit/conf.d/{{ app }}
-  become: yes
