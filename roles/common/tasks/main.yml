@@ -2,6 +2,3 @@
 
 - include: packages.yml
 - include: monit.yml
-- include: tmux.yml
-- include: welcome.yml
-

@@ -44,6 +44,10 @@
     - role: dbserver # Set up database server and user for the app.
       tags: dbserver
       db_user_roles: SUPERUSER,CREATEDB
+
+    - role: devloper # Handy tools for developers
+      tags: devloper
+
   vars:
     ansible_python_interpreter: /usr/bin/python2.7
     language_packages:
