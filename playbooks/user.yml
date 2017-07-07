@@ -3,7 +3,7 @@
 # default user (ubuntu) and wont let this be run as root. But digital ocean images don't.
 
 - hosts: ofn_servers
-  remote_user: root
+  remote_user: ubuntu
 
   roles:
     - default_user

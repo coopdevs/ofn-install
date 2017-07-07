@@ -1,0 +1,16 @@
+---
+- name: Write welcome message
+  become: yes
+  template:
+    src: welcome.j2
+    dest: /etc/update-motd.d/20-ofn
+    group: root
+    mode: 0755
+
+- name: remove default ubuntu header
+  become: yes
+  action: file path=/etc/update-motd.d/00-header state=absent
+
+- name: remove default ubuntu help text
+  become: yes
+  action: file path=/etc/update-motd.d/10-help-text state=absent

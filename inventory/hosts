@@ -63,8 +63,6 @@ staging.usfoodcoop.org ansible_host=
 us-prod
 us-staging
 
-
-
 #------------------------------------------------------------------------------
 # All
 
@@ -74,4 +72,3 @@ ie
 in
 uk
 us
-de

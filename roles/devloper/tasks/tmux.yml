@@ -1,0 +1,38 @@
+- name: Add ppa for tmux
+  become: yes
+  apt_repository:
+    repo: ppa:pi-rho/dev
+    state: present
+    update_cache: yes
+
+- name: Install modern tmux
+  become: yes
+  apt:
+    name: tmux-next
+    state: present
+    force: yes
+
+# This is needed because tmuxinator needs tmux to be in the path.
+# I Tried with an alias as well but it didn't work
+- name: Symlink tmux-next to tmux
+  become: yes
+  file:
+    src: /usr/bin/tmux-next
+    dest: /usr/bin/tmux
+    state: link
+
+- name: Install tmuxinator
+  become: yes
+  become_user: "{{ unicorn_user }}"
+  command: bash -lc "gem install tmuxinator  --no-ri --no-rdoc"
+  tags: skip_ansible_lint
+
+- name: "Create /home/{{ unicorn_user }}/.tmuxinator directory"
+  become: yes
+  become_user: "{{ unicorn_user }}"
+  file: path="/home/{{ unicorn_user }}/.tmuxinator" state=directory
+
+- name: Copy tmuxinator configuration
+  become: yes
+  become_user: "{{ unicorn_user }}"
+  copy: src=files/tmuxinator-ofn.yml dest="/home/{{ unicorn_user }}/.tmuxinator/ofn.yml"
