@@ -3,6 +3,7 @@
 
 # Flags
 # set -e
+# set -x
 
 # Default values
 name="ofn-test"
@@ -10,7 +11,7 @@ template="/usr/share/lxc/templates/lxc-ubuntu"
 rls="trusty"
 dconfig="/tmp/ubuntu.$name.conf"
 host="ofn-test.org"
-nproject="openfoodnetwork"
+nproject="coopdevs_ofn"
 fproject="${PWD%/*}/$nproject"
 app_user="openfoodnetwork"
 # External files
@@ -111,10 +112,10 @@ sudo lxc-attach -n "$name" -- /bin/sed -i 's/PermitRootLogin without-password/Pe
 echo
 echo
 # Delete default container user to create a app_user with UUID 1000 to have permissions to acces to mounted project
-sudo lxc-attach -n "$name" -- userdel -r ubuntu
+sudo lxc-attach -n "$name" -- /usr/sbin/userdel -r ubuntu
 # Create openfoodnetwork user and set password
 echo "Create user $app_user"
-sudo lxc-attach -n "$name" -- useradd -m $app_user
+sudo lxc-attach -n "$name" -- /usr/sbin/useradd -m $app_user
 echo "Setting password of $app_user..."
 sudo lxc-attach -n "$name" -- passwd $app_user
 echo
