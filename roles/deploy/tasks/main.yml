@@ -185,7 +185,7 @@
   notify:
     - precompile assets
     - restart unicorn
-    - restart delayed job workers
+    - restart delayed job service
 
 - name: seed database
   # We run a shell script that passes the default email and password to rake with an EOF block, so we don't hang on the prompts.
@@ -200,7 +200,6 @@
     - precompile assets
     - restart unicorn
 
-
 # tag to trigger a unicorn restart
 - name: reset
   # needs to do something here
@@ -210,3 +209,4 @@
     - skip_ansible_lint
   notify:
     - restart unicorn
+    - restart delayed job service
